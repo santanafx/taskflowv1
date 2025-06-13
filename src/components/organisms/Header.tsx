@@ -65,7 +65,7 @@ export function Header({
               <DropdownMenuItem onClick={onCreateProject}>
                 New Project
               </DropdownMenuItem>
-              <DropdownMenuItem>Nova Equipe</DropdownMenuItem>
+              <DropdownMenuItem>New Team</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
           {/* Notifications */}
