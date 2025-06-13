@@ -6,6 +6,7 @@
 @theme {
   --color-brand-primary: #1a365d;
   --color-brand-accent: #38b2ac;
+  --color-brand-hover: #4fd1c5;
 }
 
 @theme inline {
