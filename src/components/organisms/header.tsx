@@ -16,35 +16,24 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { BrandLogo } from "@/components/atoms/BrandLogo";
+import { UseQueryResult } from "@tanstack/react-query";
+import {
+  Notification,
+  NotificationError,
+} from "@/services/types/notifications.types";
 
 interface HeaderProps {
+  notifications: UseQueryResult<Notification[], NotificationError>;
   onCreateTask: () => void;
   onCreateProject: () => void;
 }
 
-export function Header({ onCreateTask, onCreateProject }: HeaderProps) {
-  const notifications = [
-    {
-      id: 1,
-      title: "Nova tarefa atribuída",
-      time: "2 min atrás",
-      unread: true,
-    },
-    {
-      id: 2,
-      title: "Deadline se aproximando",
-      time: "1 hora atrás",
-      unread: true,
-    },
-    {
-      id: 3,
-      title: "Comentário adicionado",
-      time: "3 horas atrás",
-      unread: false,
-    },
-  ];
-
-  const unreadCount = notifications.filter((n) => n.unread).length;
+export function Header({
+  notifications,
+  onCreateTask,
+  onCreateProject,
+}: HeaderProps) {
+  const unreadCount = notifications.data?.filter((n) => n.unread).length ?? 0;
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 px-6 py-4">
@@ -97,7 +86,7 @@ export function Header({ onCreateTask, onCreateProject }: HeaderProps) {
               <div className="space-y-4">
                 <h3 className="font-semibold">Notifications</h3>
                 <div className="space-y-2">
-                  {notifications.map((notification) => (
+                  {notifications.data?.map((notification) => (
                     <div
                       key={notification.id}
                       className={`p-3 rounded-lg border ${
