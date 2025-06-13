@@ -1,0 +1,22 @@
+{
+  "notifications": [
+    {
+      "id": 1,
+      "title": "New task assigned",
+      "time": "2 min ago",
+      "unread": true
+    },
+    {
+      "id": 2,
+      "title": "Deadline approaching",
+      "time": "1 hour ago",
+      "unread": true
+    },
+    {
+      "id": 3,
+      "title": "Comment added",
+      "time": "3 hours ago",
+      "unread": false
+    }
+  ]
+}
