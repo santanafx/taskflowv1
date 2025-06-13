@@ -1,5 +1,6 @@
 "use client";
 import { Header } from "@/components/organisms/Header";
+import { MetricsPanel } from "@/components/organisms/MetricsPanel";
 import { ProjectModal } from "@/components/organisms/ProjectModal";
 import { Sidebar } from "@/components/organisms/Sidebar";
 import { TaskModal } from "@/components/organisms/TaskModal";
@@ -31,6 +32,13 @@ export default function Home() {
           onViewChange={setSelectedView}
           onCreateProject={() => setIsProjectModalOpen(true)}
         />
+
+        <main className={`flex-1 transition-all duration-300 pt-16`}>
+          <div className="p-6 space-y-6">
+            {/* Metrics Panel */}
+            <MetricsPanel />
+          </div>
+        </main>
       </div>
 
       <TaskModal
