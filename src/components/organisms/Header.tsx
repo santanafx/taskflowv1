@@ -65,6 +65,7 @@ export function Header({
               <DropdownMenuItem onClick={onCreateProject}>
                 New Project
               </DropdownMenuItem>
+              {/* TODO implement new team modal */}
               <DropdownMenuItem>New Team</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
