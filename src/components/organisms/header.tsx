@@ -47,8 +47,6 @@ export function Header({
             </h1>
           </div>
         </div>
-
-        {/* Actions */}
         <div className="flex items-center space-x-4">
           {/* Create Button */}
           <DropdownMenu>
@@ -69,7 +67,6 @@ export function Header({
               <DropdownMenuItem>Nova Equipe</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-
           {/* Notifications */}
           <Popover>
             <PopoverTrigger asChild>
@@ -107,7 +104,6 @@ export function Header({
               </div>
             </PopoverContent>
           </Popover>
-
           {/* User Profile */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
