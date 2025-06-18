@@ -18,5 +18,152 @@
       "time": "3 hours ago",
       "unread": false
     }
+  ],
+  "columns": [
+    {
+      "id": "backlog",
+      "title": "Backlog",
+      "color": "bg-gray-100"
+    },
+    {
+      "id": "todo",
+      "title": "To Do",
+      "color": "bg-blue-100"
+    },
+    {
+      "id": "progress",
+      "title": "In Progress",
+      "color": "bg-yellow-100"
+    },
+    {
+      "id": "done",
+      "title": "Done",
+      "color": "bg-green-100"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "1",
+      "title": "Implement authentication",
+      "description": "Create user login and registration system",
+      "assignee": {
+        "name": "Ana Silva",
+        "avatar": "AS"
+      },
+      "deadline": "2024-01-15",
+      "priority": "high",
+      "comments": 3,
+      "attachments": 2,
+      "tags": [
+        "Backend",
+        "Segurança"
+      ],
+      "columnId": "backlog"
+    },
+    {
+      "id": "2",
+      "title": "Dashboard design",
+      "description": "Create wireframes and prototypes for the main panel",
+      "assignee": {
+        "name": "Carlos Lima",
+        "avatar": "CL"
+      },
+      "deadline": "2024-01-20",
+      "priority": "medium",
+      "comments": 1,
+      "attachments": 0,
+      "tags": [
+        "Design",
+        "UI/UX"
+      ],
+      "columnId": "backlog"
+    },
+    {
+      "id": "3",
+      "title": "Set up CI/CD",
+      "description": "Implement automatic deployment pipeline",
+      "assignee": {
+        "name": "João Santos",
+        "avatar": "JS"
+      },
+      "deadline": "2024-01-18",
+      "priority": "high",
+      "comments": 0,
+      "attachments": 1,
+      "tags": [
+        "DevOps"
+      ],
+      "columnId": "todo"
+    },
+    {
+      "id": "4",
+      "title": "Notifications API",
+      "description": "Develop real-time notification system",
+      "assignee": {
+        "name": "Maria Costa",
+        "avatar": "MC"
+      },
+      "deadline": "2024-01-22",
+      "priority": "medium",
+      "comments": 5,
+      "attachments": 3,
+      "tags": [
+        "Backend",
+        "Real-time"
+      ],
+      "columnId": "progress"
+    },
+    {
+      "id": "5",
+      "title": "Unit tests",
+      "description": "Write tests for main modules",
+      "assignee": {
+        "name": "Pedro Oliveira",
+        "avatar": "PO"
+      },
+      "deadline": "2024-01-25",
+      "priority": "low",
+      "comments": 2,
+      "attachments": 0,
+      "tags": [
+        "Testing"
+      ],
+      "columnId": "progress"
+    },
+    {
+      "id": "7",
+      "title": "Project setup",
+      "description": "Initial repository and structure configuration",
+      "assignee": {
+        "name": "João Santos",
+        "avatar": "JS"
+      },
+      "deadline": "2024-01-10",
+      "priority": "high",
+      "comments": 0,
+      "attachments": 0,
+      "tags": [
+        "Setup"
+      ],
+      "columnId": "done"
+    },
+    {
+      "id": "f329bbd1-1428-474c-9326-45ae2605a10f",
+      "title": "teste",
+      "description": "teste task",
+      "assignee": {
+        "name": "Ana Silva",
+        "avatar": "AS"
+      },
+      "deadline": "2025-06-24T03:00:00.000Z",
+      "priority": "low",
+      "comments": 0,
+      "attachments": [],
+      "tags": [
+        "Backend",
+        "Frontend"
+      ],
+      "columnId": "backlog"
+    }
   ]
 }

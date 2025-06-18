@@ -1,3 +1,5 @@
 {
-  "/notifications*": "/notifications$1"
+  "/notifications*": "/notifications$1",
+  "/api/tasks*": "/tasks$1",
+  "/api/columns*": "/columns$1"
 }
