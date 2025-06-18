@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Flag,
   User,
@@ -51,13 +51,15 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { getInitials } from "@/utils/getInitials";
-import { Task } from "@/services/types/task.types";
+import { Comment, Task } from "@/services/types/task.types";
+import { RootState } from "@/store";
+import { useSelector } from "react-redux";
 
 interface TaskModalProps {
   createTask: UseMutationResult<Task, Error, Task, unknown>;
   isOpen: boolean;
   onClose: () => void;
-  task?: any; //TODO fix type
+  selectedTask?: Task;
 }
 
 const taskModalSchema = z.object({
@@ -97,45 +99,41 @@ export function TaskModal({
   createTask,
   isOpen,
   onClose,
-  task,
+  selectedTask,
 }: TaskModalProps) {
+  const userName = useSelector((state: RootState) => state.user.userName);
   const [newComment, setNewComment] = useState("");
+  const [comments, setComments] = useState<Comment[]>([]);
 
   const form = useForm<z.infer<typeof taskModalSchema>>({
     resolver: zodResolver(taskModalSchema),
     defaultValues: {
-      title: task?.title || "",
-      description: task?.description || "",
-      tags: task?.tags || [],
-      priority: task?.priority || "medium",
-      assignee: task?.priority || "",
-      deadline: task?.deadline || "",
+      title: selectedTask?.title || "",
+      description: selectedTask?.description || "",
+      tags: selectedTask?.tags || [],
+      priority: selectedTask?.priority || "medium",
+      assignee: selectedTask?.priority || "",
+      deadline: selectedTask?.deadline
+        ? new Date(selectedTask.deadline)
+        : undefined,
     },
   });
 
-  //TODO implement comments
-  const comments = [
-    {
-      id: 1,
-      author: "Ana Silva",
-      avatar: "AS",
-      content: "Precisamos revisar os requisitos antes de prosseguir.",
-      time: "2 hours ago",
-    },
-    {
-      id: 2,
-      author: "João Santos",
-      avatar: "JS",
-      content: "Concordo. Vou agendar uma reunião para amanhã.",
-      time: "1 hour ago",
-    },
-  ];
+  const isTaskIdUndefined =
+    selectedTask?.id === undefined || selectedTask?.id === "";
 
   const handleAddComment = () => {
-    if (newComment.trim()) {
-      //TODO implement comment saving logic
-      setNewComment("");
-    }
+    setComments((prevComments) => [
+      ...prevComments,
+      {
+        id: crypto.randomUUID(),
+        author: userName,
+        avatar: getInitials(userName),
+        content: newComment,
+        time: new Date().toLocaleString(),
+      },
+    ]);
+    setNewComment("");
   };
 
   const onSubmit = (values: z.infer<typeof taskModalSchema>) => {
@@ -150,13 +148,17 @@ export function TaskModal({
         },
         deadline: values.deadline.toISOString(),
         priority: values.priority || "medium",
-        comments: 0,
+        comments: comments,
         attachments: [],
         tags: values.tags || [],
-        columnId: "backlog",
+        columnId:
+          selectedTask?.columnId && selectedTask.columnId.length > 0
+            ? selectedTask.columnId
+            : "backlog",
       },
       {
         onSuccess: () => {
+          setComments([]);
           onClose();
           form.reset();
         },
@@ -187,6 +189,14 @@ export function TaskModal({
     );
   };
 
+  useEffect(() => {
+    if (!selectedTask) {
+      setComments([]);
+    } else if (selectedTask.comments && selectedTask.comments.length > 0) {
+      setComments(selectedTask.comments);
+    }
+  }, [selectedTask]);
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="w-[95vw] sm:w-[90vw] md:min-w-[32rem] lg:min-w-4xl max-w-4xl max-h-[90vh] overflow-y-auto">
@@ -194,7 +204,7 @@ export function TaskModal({
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <DialogHeader>
               <DialogTitle className="text-xl font-semibold text-brand-primary">
-                {task ? "Edit Task" : "New Task"}
+                {!isTaskIdUndefined ? "Edit Task" : "New Task"}
               </DialogTitle>
             </DialogHeader>
 
@@ -334,7 +344,7 @@ export function TaskModal({
                   <div className="flex space-x-2">
                     <Avatar className="w-8 h-8">
                       <AvatarFallback className="text-xs bg-brand-primary text-white">
-                        JS
+                        {getInitials(userName)}
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1 flex space-x-2">
@@ -346,7 +356,11 @@ export function TaskModal({
                           e.key === "Enter" && handleAddComment()
                         }
                       />
-                      <Button onClick={handleAddComment} size="sm">
+                      <Button
+                        type="button"
+                        onClick={handleAddComment}
+                        size="sm"
+                      >
                         Send
                       </Button>
                     </div>
@@ -495,7 +509,7 @@ export function TaskModal({
                     type="submit"
                     className="flex-1 bg-brand-accent hover:bg-brand-hover w-full"
                   >
-                    {task ? "Save Changes" : "Create Task"}
+                    {!isTaskIdUndefined ? "Save Changes" : "Create Task"}
                   </Button>
                   <Button
                     variant="outline"
@@ -504,7 +518,7 @@ export function TaskModal({
                   >
                     Cancel
                   </Button>
-                  {task && (
+                  {!isTaskIdUndefined && (
                     <Button variant="destructive" className="w-full">
                       Delete Task
                     </Button>
