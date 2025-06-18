@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 import {
-  Calendar,
   Flag,
   User,
   MessageCircle,
   Paperclip,
   Plus,
   X,
+  CalendarIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,7 +29,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { UseMutationResult } from "@tanstack/react-query";
-import { Task } from "@/services/hooks/useCreateTask";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -47,6 +46,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+import { getInitials } from "@/utils/getInitials";
+import { Task } from "@/services/types/task.types";
 
 interface TaskModalProps {
   createTask: UseMutationResult<Task, Error, Task, unknown>;
@@ -60,9 +65,17 @@ const taskModalSchema = z.object({
     message: "Title must be at least 2 characters.",
   }),
   description: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
+    message: "Description must be at least 2 characters.",
   }),
   tags: z.array(z.string()).optional(),
+  priority: z.enum(["low", "medium", "high"]).optional(),
+  assignee: z.string().min(1, {
+    message: "Assignee is required.",
+  }),
+  deadline: z.date({
+    message: "Deadline is required.",
+  }),
+  file: z.any().optional(),
 });
 
 const AVAILABLE_TAGS = [
@@ -76,12 +89,16 @@ const AVAILABLE_TAGS = [
   "Mobile",
   "API",
   "Infrastructure",
-] as const;
+];
 
-export function TaskModal({ isOpen, onClose, task }: TaskModalProps) {
-  const [priority, setPriority] = useState(task?.priority || "medium");
-  const [assignee, setAssignee] = useState(task?.assignee?.name || "");
-  const [deadline, setDeadline] = useState(task?.deadline || "");
+const AVAILABLE_PRIORITIES = ["low", "medium", "high"];
+
+export function TaskModal({
+  createTask,
+  isOpen,
+  onClose,
+  task,
+}: TaskModalProps) {
   const [newComment, setNewComment] = useState("");
 
   const form = useForm<z.infer<typeof taskModalSchema>>({
@@ -90,6 +107,9 @@ export function TaskModal({ isOpen, onClose, task }: TaskModalProps) {
       title: task?.title || "",
       description: task?.description || "",
       tags: task?.tags || [],
+      priority: task?.priority || "medium",
+      assignee: task?.priority || "",
+      deadline: task?.deadline || "",
     },
   });
 
@@ -119,7 +139,32 @@ export function TaskModal({ isOpen, onClose, task }: TaskModalProps) {
   };
 
   const onSubmit = (values: z.infer<typeof taskModalSchema>) => {
-    console.log(values);
+    createTask.mutate(
+      {
+        id: crypto.randomUUID(),
+        title: values.title,
+        description: values.description,
+        assignee: {
+          name: values.assignee,
+          avatar: getInitials(values.assignee),
+        },
+        deadline: values.deadline.toISOString(),
+        priority: values.priority || "medium",
+        comments: 0,
+        attachments: [],
+        tags: values.tags || [],
+        columnId: "backlog",
+      },
+      {
+        onSuccess: () => {
+          onClose();
+          form.reset();
+        },
+        onError: (error) => {
+          console.error("Error creating/updating task:", error);
+        },
+      }
+    );
   };
 
   const handleTagSelect = (tagName: string) => {
@@ -215,24 +260,39 @@ export function TaskModal({ isOpen, onClose, task }: TaskModalProps) {
                       </Badge>
                     ))}
 
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="sm" className="h-6">
-                          <Plus className="w-3 h-3 mr-1" />
-                          Add
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="start">
-                        {AVAILABLE_TAGS.map((tag) => (
-                          <DropdownMenuItem
-                            key={tag}
-                            onSelect={() => handleTagSelect(tag)}
-                          >
-                            {tag}
-                          </DropdownMenuItem>
-                        ))}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                    <FormField
+                      control={form.control}
+                      name="tags"
+                      render={() => (
+                        <FormItem>
+                          <DropdownMenu>
+                            <FormControl>
+                              <DropdownMenuTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-6"
+                                >
+                                  <Plus className="w-3 h-3 mr-1" />
+                                  Add
+                                </Button>
+                              </DropdownMenuTrigger>
+                            </FormControl>
+                            <DropdownMenuContent align="start">
+                              {AVAILABLE_TAGS.map((tag) => (
+                                <DropdownMenuItem
+                                  key={tag}
+                                  onSelect={() => handleTagSelect(tag)}
+                                >
+                                  {tag}
+                                </DropdownMenuItem>
+                              ))}
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                   </div>
                 </div>
 
@@ -297,66 +357,137 @@ export function TaskModal({ isOpen, onClose, task }: TaskModalProps) {
               {/* Sidebar */}
               <div className="space-y-4">
                 {/* Priority */}
-                <div>
-                  <label className="text-sm font-medium text-gray-700 mb-2 block flex items-center">
-                    <Flag className="w-4 h-4 mr-2" />
-                    Priority
-                  </label>
-                  <Select value={priority} onValueChange={setPriority}>
-                    <SelectTrigger className="w-full">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="low">Low</SelectItem>
-                      <SelectItem value="medium">Medium</SelectItem>
-                      <SelectItem value="high">High</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                <FormField
+                  control={form.control}
+                  name="priority"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium text-gray-700 mb-2 flex items-center">
+                        <Flag className="w-4 h-4 mr-2" />
+                        Priority
+                      </FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="w-full">
+                            <SelectValue />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {AVAILABLE_PRIORITIES.map((priority) => (
+                            <SelectItem key={priority} value={priority}>
+                              {priority.charAt(0).toUpperCase() +
+                                priority.slice(1)}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
                 {/* Assignee */}
-                <div>
-                  <label className="text-sm font-medium text-gray-700 mb-2 block flex items-center">
-                    <User className="w-4 h-4 mr-2" />
-                    Assignee
-                  </label>
-                  <Select value={assignee} onValueChange={setAssignee}>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select person" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Ana Silva">Ana Silva</SelectItem>
-                      <SelectItem value="João Santos">João Santos</SelectItem>
-                      <SelectItem value="Carlos Lima">Carlos Lima</SelectItem>
-                      <SelectItem value="Maria Costa">Maria Costa</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                <FormField
+                  control={form.control}
+                  name="assignee"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium text-gray-700 mb-2 flex items-center">
+                        <User className="w-4 h-4 mr-2" />
+                        Assignee
+                      </FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select person" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="Ana Silva">Ana Silva</SelectItem>
+                          <SelectItem value="João Santos">
+                            João Santos
+                          </SelectItem>
+                          <SelectItem value="Carlos Lima">
+                            Carlos Lima
+                          </SelectItem>
+                          <SelectItem value="Maria Costa">
+                            Maria Costa
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
                 {/* Deadline */}
-                <div>
-                  <label className="text-sm font-medium text-gray-700 mb-2 block flex items-center">
-                    <Calendar className="w-4 h-4 mr-2" />
-                    Deadline
-                  </label>
-                  <Input
-                    type="date"
-                    value={deadline}
-                    onChange={(e) => setDeadline(e.target.value)}
-                  />
-                </div>
+                <FormField
+                  control={form.control}
+                  name="deadline"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                      <FormLabel className="text-sm font-medium text-gray-700 mb-2 flex items-center">
+                        {" "}
+                        <CalendarIcon className="w-4 h-4 mr-2" />
+                        Deadline
+                      </FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                "w-full pl-3 text-left font-normal",
+                                !field.value && "text-muted-foreground"
+                              )}
+                            >
+                              {field.value ? (
+                                format(field.value, "PPP")
+                              ) : (
+                                <span>Pick a date</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={field.onChange}
+                            disabled={(date) => date < new Date()}
+                            captionLayout="dropdown"
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
                 {/* Attachments */}
-                <div>
-                  <label className="text-sm font-medium text-gray-700 mb-2 block flex items-center">
-                    <Paperclip className="w-4 h-4 mr-2" />
-                    Attachments
-                  </label>
-                  <Button variant="outline" className="w-full">
-                    <Plus className="w-4 h-4 mr-2" />
-                    Add file
-                  </Button>
-                </div>
+                <FormField
+                  control={form.control}
+                  name="file"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium text-gray-700 mb-2 flex items-center">
+                        <Paperclip className="w-4 h-4 mr-2" />
+                        Attachments
+                      </FormLabel>
+                      <FormControl>
+                        <Input type="file" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
                 {/* Actions */}
                 <div className="pt-4 space-y-2">
