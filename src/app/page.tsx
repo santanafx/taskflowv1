@@ -22,7 +22,6 @@ export default function Home() {
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task>();
-  console.log(selectedTask);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [selectedView, setSelectedView] = useState<
     "kanban" | "timeline" | "list"
