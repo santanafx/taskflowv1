@@ -57,6 +57,7 @@ import { useSelector } from "react-redux";
 
 interface TaskModalProps {
   createTask: UseMutationResult<Task, Error, Task, unknown>;
+  updateTask: UseMutationResult<Task, Error, Task, unknown>;
   isOpen: boolean;
   onClose: () => void;
   selectedTask?: Task;
@@ -97,6 +98,7 @@ const AVAILABLE_PRIORITIES = ["low", "medium", "high"];
 
 export function TaskModal({
   createTask,
+  updateTask,
   isOpen,
   onClose,
   selectedTask,
@@ -137,36 +139,69 @@ export function TaskModal({
   };
 
   const onSubmit = (values: z.infer<typeof taskModalSchema>) => {
-    createTask.mutate(
-      {
-        id: crypto.randomUUID(),
-        title: values.title,
-        description: values.description,
-        assignee: {
-          name: values.assignee,
-          avatar: getInitials(values.assignee),
+    if (selectedTask?.id !== undefined && selectedTask?.id !== "") {
+      updateTask.mutate(
+        {
+          id: selectedTask.id,
+          title: values.title,
+          description: values.description,
+          assignee: {
+            name: values.assignee,
+            avatar: getInitials(values.assignee),
+          },
+          deadline: values.deadline.toISOString(),
+          priority: values.priority || "medium",
+          comments: comments,
+          attachments: [],
+          tags: values.tags || [],
+          columnId:
+            selectedTask?.columnId && selectedTask.columnId.length > 0
+              ? selectedTask.columnId
+              : "backlog",
         },
-        deadline: values.deadline.toISOString(),
-        priority: values.priority || "medium",
-        comments: comments,
-        attachments: [],
-        tags: values.tags || [],
-        columnId:
-          selectedTask?.columnId && selectedTask.columnId.length > 0
-            ? selectedTask.columnId
-            : "backlog",
-      },
-      {
-        onSuccess: () => {
-          setComments([]);
-          onClose();
-          form.reset();
+        {
+          onSuccess: () => {
+            setComments([]);
+            onClose();
+            form.reset();
+          },
+          onError: (error) => {
+            console.error("Error creating/updating task:", error);
+          },
+        }
+      );
+    } else {
+      createTask.mutate(
+        {
+          id: crypto.randomUUID(),
+          title: values.title,
+          description: values.description,
+          assignee: {
+            name: values.assignee,
+            avatar: getInitials(values.assignee),
+          },
+          deadline: values.deadline.toISOString(),
+          priority: values.priority || "medium",
+          comments: comments,
+          attachments: [],
+          tags: values.tags || [],
+          columnId:
+            selectedTask?.columnId && selectedTask.columnId.length > 0
+              ? selectedTask.columnId
+              : "backlog",
         },
-        onError: (error) => {
-          console.error("Error creating/updating task:", error);
-        },
-      }
-    );
+        {
+          onSuccess: () => {
+            setComments([]);
+            onClose();
+            form.reset();
+          },
+          onError: (error) => {
+            console.error("Error creating/updating task:", error);
+          },
+        }
+      );
+    }
   };
 
   const handleTagSelect = (tagName: string) => {
