@@ -6,6 +6,7 @@ import { ProjectModal } from "@/components/organisms/ProjectModal";
 import { Sidebar } from "@/components/organisms/Sidebar";
 import { TaskModal } from "@/components/organisms/TaskModal";
 import { useCreateTask } from "@/services/hooks/useCreateTask";
+import { useDeleteTask } from "@/services/hooks/useDeleteTask";
 import { useGetColumns } from "@/services/hooks/useGetColumns";
 import { useGetNotifications } from "@/services/hooks/useGetNotifications";
 import { useGetTasks } from "@/services/hooks/useGetTasks";
@@ -19,6 +20,7 @@ export default function Home() {
   const tasks = useGetTasks();
   const columns = useGetColumns();
   const updateTask = useUpdateTask();
+  const deleteTask = useDeleteTask();
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task>();
@@ -86,6 +88,7 @@ export default function Home() {
       <TaskModal
         createTask={createTask}
         updateTask={updateTask}
+        deleteTask={deleteTask}
         isOpen={isTaskModalOpen}
         onClose={() => {
           setIsTaskModalOpen(false);
