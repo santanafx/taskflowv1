@@ -85,6 +85,7 @@ export default function Home() {
 
       <TaskModal
         createTask={createTask}
+        updateTask={updateTask}
         isOpen={isTaskModalOpen}
         onClose={() => {
           setIsTaskModalOpen(false);
