@@ -112,7 +112,7 @@ export function TaskModal({
       description: selectedTask?.description || "",
       tags: selectedTask?.tags || [],
       priority: selectedTask?.priority || "medium",
-      assignee: selectedTask?.priority || "",
+      assignee: selectedTask?.assignee?.name || "",
       deadline: selectedTask?.deadline
         ? new Date(selectedTask.deadline)
         : undefined,
@@ -196,6 +196,31 @@ export function TaskModal({
       setComments(selectedTask.comments);
     }
   }, [selectedTask]);
+
+  // Reset form when selectedTask changes
+  useEffect(() => {
+    if (selectedTask) {
+      form.reset({
+        title: selectedTask.title || "",
+        description: selectedTask.description || "",
+        tags: selectedTask.tags || [],
+        priority: selectedTask.priority || "medium",
+        assignee: selectedTask.assignee?.name || "",
+        deadline: selectedTask.deadline
+          ? new Date(selectedTask.deadline)
+          : undefined,
+      });
+    } else {
+      form.reset({
+        title: "",
+        description: "",
+        tags: [],
+        priority: "medium",
+        assignee: "",
+        deadline: undefined,
+      });
+    }
+  }, [selectedTask, form]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
