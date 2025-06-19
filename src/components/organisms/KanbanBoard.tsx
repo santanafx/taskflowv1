@@ -15,6 +15,7 @@ import { TaskCard } from "./TaskCard";
 import { UseMutationResult, UseQueryResult } from "@tanstack/react-query";
 import { Column } from "@/services/hooks/useGetColumns";
 import { Task } from "@/services/types/task.types";
+import { Skeleton } from "../ui/skeleton";
 
 interface KanbanBoardProps {
   tasks: UseQueryResult<Task[]>;
@@ -83,7 +84,34 @@ export function KanbanBoard({
   };
 
   if (tasks.isLoading || columns.isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex">
+        <div className="flex flex-col p-6">
+          <Skeleton className="h-[56px] w-[320px] mb-[16px]" />
+          <Skeleton className="h-[190px] w-[320px] mb-[16px]" />
+          <Skeleton className="h-[56px] w-[320px] mb-[16px]" />
+          <Skeleton className="h-[190px] w-[320px] mb-[16px]" />
+        </div>
+        <div className="flex flex-col p-6">
+          <Skeleton className="h-[56px] w-[320px] mb-[16px]" />
+          <Skeleton className="h-[190px] w-[320px] mb-[16px]" />
+          <Skeleton className="h-[56px] w-[320px] mb-[16px]" />
+          <Skeleton className="h-[190px] w-[320px] mb-[16px]" />
+        </div>
+        <div className="flex flex-col p-6">
+          <Skeleton className="h-[56px] w-[320px] mb-[16px]" />
+          <Skeleton className="h-[190px] w-[320px] mb-[16px]" />
+          <Skeleton className="h-[56px] w-[320px] mb-[16px]" />
+          <Skeleton className="h-[190px] w-[320px] mb-[16px]" />
+        </div>
+        <div className="flex flex-col p-6">
+          <Skeleton className="h-[56px] w-[320px] mb-[16px]" />
+          <Skeleton className="h-[190px] w-[320px] mb-[16px]" />
+          <Skeleton className="h-[56px] w-[320px] mb-[16px]" />
+          <Skeleton className="h-[190px] w-[320px] mb-[16px]" />
+        </div>
+      </div>
+    );
   }
 
   return (
