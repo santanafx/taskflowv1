@@ -58,6 +58,7 @@ import { useSelector } from "react-redux";
 interface TaskModalProps {
   createTask: UseMutationResult<Task, Error, Task, unknown>;
   updateTask: UseMutationResult<Task, Error, Task, unknown>;
+  deleteTask: UseMutationResult<void, Error, string, unknown>;
   isOpen: boolean;
   onClose: () => void;
   selectedTask?: Task;
@@ -99,6 +100,7 @@ const AVAILABLE_PRIORITIES = ["low", "medium", "high"];
 export function TaskModal({
   createTask,
   updateTask,
+  deleteTask,
   isOpen,
   onClose,
   selectedTask,
@@ -224,6 +226,21 @@ export function TaskModal({
     );
   };
 
+  const handleDeleteTask = () => {
+    if (selectedTask?.id) {
+      deleteTask.mutate(selectedTask.id, {
+        onSuccess: () => {
+          setComments([]);
+          onClose();
+          form.reset();
+        },
+        onError: (error) => {
+          console.error("Error deleting task:", error);
+        },
+      });
+    }
+  };
+
   useEffect(() => {
     if (!selectedTask) {
       setComments([]);
@@ -232,7 +249,6 @@ export function TaskModal({
     }
   }, [selectedTask]);
 
-  // Reset form when selectedTask changes
   useEffect(() => {
     if (selectedTask) {
       form.reset({
@@ -579,7 +595,11 @@ export function TaskModal({
                     Cancel
                   </Button>
                   {!isTaskIdUndefined && (
-                    <Button variant="destructive" className="w-full">
+                    <Button
+                      variant="destructive"
+                      className="w-full"
+                      onClick={handleDeleteTask}
+                    >
                       Delete Task
                     </Button>
                   )}
