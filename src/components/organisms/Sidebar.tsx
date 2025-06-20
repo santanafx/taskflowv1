@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   ChevronLeft,
   ChevronRight,
@@ -21,6 +22,8 @@ import { useRouter, usePathname } from "next/navigation";
 import { UseQueryResult } from "@tanstack/react-query";
 import { Project } from "@/services/types/project.type";
 import { cn } from "@/lib/utils";
+import { selectProject } from "@/store/slices/project/project.slice";
+import { RootState } from "@/store";
 
 interface SidebarProps {
   getProjects: UseQueryResult<Project[]>;
@@ -41,11 +44,12 @@ export function Sidebar({
 }: SidebarProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const [selectedProject, setSelectedProject] = useState("projeto-alpha");
-  //TODO remove mocks
-  const projects = getProjects?.data ?? [];
+  const dispatch = useDispatch();
+  const selectedProject = useSelector(
+    (state: RootState) => state.project.selectedProject
+  );
 
-  console.log(projects);
+  const projects = getProjects?.data ?? [];
 
   const navigation = [
     { id: "dashboard", name: "Dashboard", icon: Home, path: "/" },
@@ -64,6 +68,12 @@ export function Sidebar({
   const handleNavigation = (path: string) => {
     router.push(path);
   };
+
+  useEffect(() => {
+    if (projects.length > 0 && !selectedProject) {
+      dispatch(selectProject(projects[0]));
+    }
+  }, [projects, selectedProject, dispatch]);
 
   return (
     <div
@@ -177,12 +187,14 @@ export function Sidebar({
           {projects.map((project) => (
             <Button
               key={project.id}
-              variant={selectedProject === project.id ? "secondary" : "ghost"}
+              variant={
+                selectedProject.id === project.id ? "secondary" : "ghost"
+              }
               className={cn(
                 "w-full justify-center hover:bg-gray-100",
                 collapsed ? "px-0 h-12" : "justify-start"
               )}
-              onClick={() => setSelectedProject(project.id)}
+              onClick={() => dispatch(selectProject(project))}
             >
               <div
                 className={cn(
