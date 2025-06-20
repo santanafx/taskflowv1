@@ -16,6 +16,8 @@ import { UseMutationResult, UseQueryResult } from "@tanstack/react-query";
 import { Column } from "@/services/hooks/useGetColumns";
 import { Task } from "@/services/types/task.types";
 import { Skeleton } from "../ui/skeleton";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 interface KanbanBoardProps {
   tasks: UseQueryResult<Task[]>;
@@ -34,8 +36,14 @@ export function KanbanBoard({
   onCreateTask,
   setSelectedTask,
 }: KanbanBoardProps) {
+  const selectedProjectId = useSelector(
+    (state: RootState) => state.project.selectedProject?.id
+  );
   const [draggedTask, setDraggedTask] = useState<Task | null>(null);
   const [draggedFrom, setDraggedFrom] = useState<string | null>(null);
+  const tasksFromSelectedProject = tasks.data?.filter(
+    (task) => task.projectId === selectedProjectId
+  );
 
   const handleDragStart = (task: Task, columnId: string) => {
     setDraggedTask(task);
@@ -78,6 +86,7 @@ export function KanbanBoard({
       comments: [],
       attachments: [],
       tags: [],
+      projectId: "",
       columnId: columnId,
     });
     onCreateTask();
@@ -146,8 +155,9 @@ export function KanbanBoard({
                   </h3>
                   <span className="bg-white px-2 py-1 rounded-full text-xs font-medium">
                     {
-                      tasks.data?.filter((task) => task.columnId === column.id)
-                        .length
+                      tasksFromSelectedProject?.filter(
+                        (task) => task.columnId === column.id
+                      ).length
                     }
                   </span>
                 </div>
@@ -167,7 +177,7 @@ export function KanbanBoard({
             </div>
 
             <div className="space-y-3 min-h-[400px]">
-              {tasks.data
+              {tasksFromSelectedProject
                 ?.filter((task) => task.columnId === column.id)
                 .map((task) => (
                   <TaskCard
