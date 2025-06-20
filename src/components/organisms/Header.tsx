@@ -15,13 +15,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { BrandLogo } from "@/components/atoms/BrandLogo";
 import { UseQueryResult } from "@tanstack/react-query";
 import {
   Notification,
   NotificationError,
 } from "@/services/types/notifications.types";
 import { Skeleton } from "../ui/skeleton";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
+import { getInitials } from "@/utils/getInitials";
 
 interface HeaderProps {
   notifications: UseQueryResult<Notification[], NotificationError>;
@@ -34,6 +36,7 @@ export function Header({
   onCreateTask,
   onCreateProject,
 }: HeaderProps) {
+  const userName = useSelector((state: RootState) => state.user.userName);
   const unreadCount = notifications.data?.filter((n) => n.unread).length ?? 0;
 
   return (
@@ -42,7 +45,11 @@ export function Header({
         {/* Logo */}
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
-            <BrandLogo />
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-brand-primary">
+              <span className="text-white font-bold text-sm">
+                {getInitials(userName)}
+              </span>
+            </div>
             <h1 className="text-xl font-bold text-brand-primary">
               TaskFlow Pro
             </h1>
@@ -115,7 +122,7 @@ export function Header({
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="flex items-center space-x-2">
                 <BrandLogo className="rounded-full" />
-                <span className="hidden md:block">Users name</span>
+                <span className="hidden md:block">{userName}</span>
                 <ChevronDown className="w-4 h-4" />
               </Button>
             </DropdownMenuTrigger>
