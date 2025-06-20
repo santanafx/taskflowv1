@@ -19,5 +19,6 @@ export type Task = {
   comments: Comment[];
   attachments: File[];
   tags: string[];
+  projectId: string;
   columnId: string;
 };
