@@ -46,9 +46,7 @@ export function Header({
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-brand-primary">
-              <span className="text-white font-bold text-sm">
-                {getInitials(userName)}
-              </span>
+              <span className="text-white font-bold text-sm">TS</span>
             </div>
             <h1 className="text-xl font-bold text-brand-primary">
               TaskFlow Pro
@@ -121,7 +119,11 @@ export function Header({
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="flex items-center space-x-2">
-                <BrandLogo className="rounded-full" />
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-brand-primary">
+                  <span className="text-white font-bold text-sm">
+                    {getInitials(userName)}
+                  </span>
+                </div>
                 <span className="hidden md:block">{userName}</span>
                 <ChevronDown className="w-4 h-4" />
               </Button>
