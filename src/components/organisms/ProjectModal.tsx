@@ -22,6 +22,7 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
+import { generateRandomColor } from "@/utils/colors";
 
 interface ProjectModalProps {
   createProject: UseMutationResult<Project, Error, Project, unknown>;
@@ -57,6 +58,7 @@ export function ProjectModal({
         id: crypto.randomUUID(),
         name: values.projectName,
         description: values.description,
+        color: generateRandomColor(),
       },
       {
         onSuccess: () => {
@@ -90,7 +92,11 @@ export function ProjectModal({
                     Project Name
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter project name..." {...field} />
+                    <Input
+                      placeholder="Enter project name..."
+                      {...field}
+                      className="mb-4"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
