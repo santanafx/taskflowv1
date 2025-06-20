@@ -16,11 +16,14 @@ import {
   TimerIcon as Timeline,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useRouter, usePathname } from "next/navigation";
+import { UseQueryResult } from "@tanstack/react-query";
+import { Project } from "@/services/types/project.type";
+import { cn } from "@/lib/utils";
 
 interface SidebarProps {
+  getProjects: UseQueryResult<Project[]>;
   collapsed: boolean;
   onToggle: () => void;
   selectedView?: "kanban" | "timeline" | "list";
@@ -29,6 +32,7 @@ interface SidebarProps {
 }
 
 export function Sidebar({
+  getProjects,
   collapsed,
   onToggle,
   selectedView = "kanban",
@@ -39,39 +43,9 @@ export function Sidebar({
   const pathname = usePathname();
   const [selectedProject, setSelectedProject] = useState("projeto-alpha");
   //TODO remove mocks
-  const projects = [
-    {
-      id: "projeto-alpha",
-      name: "Alpha Project",
-      tasks: 12,
-      color: "bg-blue-500",
-    },
-    {
-      id: "redesign-app",
-      name: "Redesign App",
-      tasks: 8,
-      color: "bg-green-500",
-    },
-    {
-      id: "marketing-q4",
-      name: "Marketing Q4",
-      tasks: 15,
-      color: "bg-purple-500",
-    },
-    {
-      id: "integracao-api",
-      name: "API Integration",
-      tasks: 7,
-      color: "bg-orange-500",
-    },
-    {
-      id: "novo-website",
-      name: "New Website",
-      tasks: 10,
-      color: "bg-red-500",
-    },
-    { id: "app-mobile", name: "Mobile App", tasks: 14, color: "bg-yellow-500" },
-  ];
+  const projects = getProjects?.data ?? [];
+
+  console.log(projects);
 
   const navigation = [
     { id: "dashboard", name: "Dashboard", icon: Home, path: "/" },
@@ -93,9 +67,10 @@ export function Sidebar({
 
   return (
     <div
-      className={`bg-white border-r border-gray-200 min-h-screen transition-[width] ease-in-out duration-200 ${
+      className={cn(
+        "bg-white border-r border-gray-200 min-h-screen transition-[width] ease-in-out duration-200 flex flex-col sticky top-0 left-0 will-change-[width]",
         collapsed ? "w-20" : "w-64"
-      } flex flex-col sticky top-0 left-0 will-change-[width]`}
+      )}
     >
       {/* Header spacer to account for fixed header */}
       <div className="h-16 flex-shrink-0"></div>
@@ -130,13 +105,13 @@ export function Sidebar({
               <Button
                 key={item.id}
                 variant={isActive ? "default" : "ghost"}
-                className={`w-full justify-center ${
-                  collapsed ? "px-0 h-12" : "justify-start"
-                } ${
+                className={cn(
+                  "w-full justify-center",
+                  collapsed ? "px-0 h-12" : "justify-start",
                   isActive
                     ? "bg-brand-primary text-white hover:bg-brand-primary/90"
                     : "hover:bg-gray-100"
-                }`}
+                )}
                 onClick={() => handleNavigation(item.path)}
               >
                 <item.icon className={collapsed ? "w-5 h-5" : "w-4 h-4"} />
@@ -160,13 +135,13 @@ export function Sidebar({
                 <Button
                   key={view.id}
                   variant={selectedView === view.id ? "default" : "ghost"}
-                  className={`w-full justify-center ${
-                    collapsed ? "px-0 h-12" : "justify-start"
-                  } ${
+                  className={cn(
+                    "w-full justify-center",
+                    collapsed ? "px-0 h-12" : "justify-start",
                     selectedView === view.id
                       ? "bg-brand-accent text-white hover:bg-brand-accent/90"
                       : "hover:bg-gray-100"
-                  }`}
+                  )}
                   onClick={() =>
                     onViewChange(view.id as "kanban" | "timeline" | "list")
                   }
@@ -203,24 +178,24 @@ export function Sidebar({
             <Button
               key={project.id}
               variant={selectedProject === project.id ? "secondary" : "ghost"}
-              className={`w-full justify-center ${
+              className={cn(
+                "w-full justify-center hover:bg-gray-100",
                 collapsed ? "px-0 h-12" : "justify-start"
-              } hover:bg-gray-100`}
+              )}
               onClick={() => setSelectedProject(project.id)}
             >
               <div
-                className={`${collapsed ? "w-4 h-4" : "w-3 h-3"} rounded-full ${
-                  project.color
-                } flex-shrink-0`}
+                className={cn(
+                  "rounded-full flex-shrink-0",
+                  collapsed ? "w-4 h-4" : "w-3 h-3"
+                )}
+                style={{ backgroundColor: project.color }}
               />
               {!collapsed && (
                 <>
                   <span className="ml-3 flex-1 text-left truncate">
                     {project.name}
                   </span>
-                  <Badge variant="secondary" className="ml-2 flex-shrink-0">
-                    {project.tasks}
-                  </Badge>
                 </>
               )}
             </Button>
