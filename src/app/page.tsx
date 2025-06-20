@@ -11,6 +11,7 @@ import { useCreateTask } from "@/services/hooks/useCreateTask";
 import { useDeleteTask } from "@/services/hooks/useDeleteTask";
 import { useGetColumns } from "@/services/hooks/useGetColumns";
 import { useGetNotifications } from "@/services/hooks/useGetNotifications";
+import { useGetProjects } from "@/services/hooks/useGetProjects";
 import { useGetTasks } from "@/services/hooks/useGetTasks";
 import { useUpdateTask } from "@/services/hooks/useUpdateTask";
 import { Task } from "@/services/types/task.types";
@@ -24,6 +25,7 @@ export default function Home() {
   const updateTask = useUpdateTask();
   const deleteTask = useDeleteTask();
   const createProject = useCreateProject();
+  const getProjects = useGetProjects();
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task>();
@@ -41,6 +43,7 @@ export default function Home() {
       />
       <div className="flex w-full">
         <Sidebar
+          getProjects={getProjects}
           collapsed={sidebarCollapsed}
           onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
           selectedView={selectedView}
