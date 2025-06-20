@@ -106,6 +106,9 @@ export function TaskModal({
   selectedTask,
 }: TaskModalProps) {
   const userName = useSelector((state: RootState) => state.user.userName);
+  const projectId = useSelector(
+    (state: RootState) => state.project.selectedProject?.id
+  );
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState<Comment[]>([]);
 
@@ -156,6 +159,7 @@ export function TaskModal({
           comments: comments,
           attachments: [],
           tags: values.tags || [],
+          projectId: projectId,
           columnId:
             selectedTask?.columnId && selectedTask.columnId.length > 0
               ? selectedTask.columnId
@@ -187,6 +191,7 @@ export function TaskModal({
           comments: comments,
           attachments: [],
           tags: values.tags || [],
+          projectId: projectId,
           columnId:
             selectedTask?.columnId && selectedTask.columnId.length > 0
               ? selectedTask.columnId
