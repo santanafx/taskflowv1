@@ -5,6 +5,8 @@ import { MetricsPanel } from "@/components/organisms/MetricsPanel";
 import { ProjectModal } from "@/components/organisms/ProjectModal";
 import { Sidebar } from "@/components/organisms/Sidebar";
 import { TaskModal } from "@/components/organisms/TaskModal";
+import { useCreateProject } from "@/services/hooks/useCreateProject";
+
 import { useCreateTask } from "@/services/hooks/useCreateTask";
 import { useDeleteTask } from "@/services/hooks/useDeleteTask";
 import { useGetColumns } from "@/services/hooks/useGetColumns";
@@ -21,6 +23,7 @@ export default function Home() {
   const columns = useGetColumns();
   const updateTask = useUpdateTask();
   const deleteTask = useDeleteTask();
+  const createProject = useCreateProject();
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task>();
@@ -98,6 +101,7 @@ export default function Home() {
       />
 
       <ProjectModal
+        createProject={createProject}
         isOpen={isProjectModalOpen}
         onClose={() => setIsProjectModalOpen(false)}
       />
