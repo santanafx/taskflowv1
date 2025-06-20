@@ -293,7 +293,9 @@ export function TaskModal({
                   name="title"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Title</FormLabel>
+                      <FormLabel className="text-sm font-medium text-gray-700 mb-2 block">
+                        Title
+                      </FormLabel>
                       <FormControl>
                         <Input placeholder="Title" {...field} />
                       </FormControl>
