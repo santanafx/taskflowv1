@@ -1,9 +1,9 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+import { MoreHorizontal, Plus } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
-import { Plus, MoreHorizontal } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 import {
   DropdownMenu,
@@ -11,13 +11,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { TaskCard } from "./TaskCard";
-import { UseMutationResult, UseQueryResult } from "@tanstack/react-query";
 import { Column } from "@/services/hooks/useGetColumns";
 import { Task } from "@/services/types/task.types";
-import { Skeleton } from "../ui/skeleton";
-import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import { UseMutationResult, UseQueryResult } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
+import { Skeleton } from "../ui/skeleton";
+import { TaskCard } from "./TaskCard";
 
 interface KanbanBoardProps {
   tasks: UseQueryResult<Task[]>;
@@ -36,13 +36,15 @@ export function KanbanBoard({
   onCreateTask,
   setSelectedTask,
 }: KanbanBoardProps) {
-  const selectedProjectId = useSelector(
-    (state: RootState) => state.project.selectedProject?.id
+  const selectedProject = useSelector(
+    (state: RootState) => state.project.selectedProject
   );
   const [draggedTask, setDraggedTask] = useState<Task | null>(null);
   const [draggedFrom, setDraggedFrom] = useState<string | null>(null);
+  const isProjectSelected = selectedProject.name !== "";
+
   const tasksFromSelectedProject = tasks.data?.filter(
-    (task) => task.projectId === selectedProjectId
+    (task) => task.projectId === selectedProject.id
   );
 
   const handleDragStart = (task: Task, columnId: string) => {
@@ -123,10 +125,19 @@ export function KanbanBoard({
     );
   }
 
+  if (!isProjectSelected)
+    return (
+      <div className="flex justify-center items-center h-[200px]">
+        <h3 className="font-semibold text-gray-800">Select a project</h3>
+      </div>
+    );
+
   return (
     <div className="p-6">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-brand-primary">Alpha Project</h2>
+        <h2 className="text-2xl font-bold text-brand-primary">
+          {selectedProject.name}
+        </h2>
         <div className="flex items-center space-x-2">
           {/* TODO implement filter */}
           <Button variant="outline" size="sm">
