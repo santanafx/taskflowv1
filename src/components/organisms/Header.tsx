@@ -1,8 +1,7 @@
 "use client";
 
-import { Bell, Plus, ChevronDown } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,15 +14,16 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { UseQueryResult } from "@tanstack/react-query";
 import {
   Notification,
   NotificationError,
 } from "@/services/types/notifications.types";
-import { Skeleton } from "../ui/skeleton";
-import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { getInitials } from "@/utils/getInitials";
+import { UseQueryResult } from "@tanstack/react-query";
+import { Bell, ChevronDown, Plus } from "lucide-react";
+import { useSelector } from "react-redux";
+import { Skeleton } from "../ui/skeleton";
 
 interface HeaderProps {
   notifications: UseQueryResult<Notification[], NotificationError>;
@@ -36,8 +36,12 @@ export function Header({
   onCreateTask,
   onCreateProject,
 }: HeaderProps) {
+  const selectedProject = useSelector(
+    (state: RootState) => state.project.selectedProject
+  );
   const userName = useSelector((state: RootState) => state.user.userName);
   const unreadCount = notifications.data?.filter((n) => n.unread).length ?? 0;
+  const isProjectSelected = selectedProject.name !== "";
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 px-6 py-4">
@@ -64,9 +68,11 @@ export function Header({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={onCreateTask}>
-                New Task
-              </DropdownMenuItem>
+              {isProjectSelected && (
+                <DropdownMenuItem onClick={onCreateTask}>
+                  New Task
+                </DropdownMenuItem>
+              )}
               <DropdownMenuItem onClick={onCreateProject}>
                 New Project
               </DropdownMenuItem>
