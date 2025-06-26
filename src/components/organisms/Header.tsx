@@ -29,12 +29,14 @@ interface HeaderProps {
   notifications: UseQueryResult<Notification[], NotificationError>;
   onCreateTask: () => void;
   onCreateProject: () => void;
+  onCreateTeam: () => void;
 }
 
 export function Header({
   notifications,
   onCreateTask,
   onCreateProject,
+  onCreateTeam,
 }: HeaderProps) {
   const selectedProject = useSelector(
     (state: RootState) => state.project.selectedProject
@@ -77,7 +79,9 @@ export function Header({
                 New Project
               </DropdownMenuItem>
               {/* TODO implement new team modal */}
-              <DropdownMenuItem>New Team</DropdownMenuItem>
+              <DropdownMenuItem onClick={onCreateTeam}>
+                New Member
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
           {/* Notifications */}
