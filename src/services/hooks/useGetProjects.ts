@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiService } from "../api/config";
 import { QueryKeys } from "../api/queryKeys";
-import { Project } from "../types/project.type";
+import { Project } from "../types/project.types";
 
 export function useGetProjects() {
   return useQuery<Project[]>({
