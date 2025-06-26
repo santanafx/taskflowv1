@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiService } from "../api/config";
 import { QueryKeys } from "../api/queryKeys";
-import { Project } from "../types/project.type";
+import { Project } from "../types/project.types";
 
 export function useCreateProject() {
   const queryClient = useQueryClient();
@@ -10,7 +10,12 @@ export function useCreateProject() {
     mutationFn: (project: Project) =>
       apiService.post<Project>(`/projects`, project),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QueryKeys.PROJECTS] });
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeys.PROJECTS],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeys.PROJECTSPROGRESS],
+      });
     },
   });
 }
