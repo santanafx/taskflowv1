@@ -8,7 +8,12 @@ export function useDeleteTask() {
   return useMutation({
     mutationFn: (taskId: string) => apiService.delete<void>(`/tasks/${taskId}`),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QueryKeys.TASKS] });
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeys.TASKS],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeys.PROJECTSPROGRESS],
+      });
     },
   });
 }
