@@ -6,15 +6,18 @@ import { MetricsPanel } from "@/components/organisms/MetricsPanel";
 import { ProjectModal } from "@/components/organisms/ProjectModal";
 import { Sidebar } from "@/components/organisms/Sidebar";
 import { TaskModal } from "@/components/organisms/TaskModal";
+import { TeamModal } from "@/components/organisms/TeamModal";
 import { useCreateProject } from "@/services/hooks/useCreateProject";
 
 import { useCreateTask } from "@/services/hooks/useCreateTask";
+import { useCreateTeam } from "@/services/hooks/useCreateTeam";
 import { useDeleteTask } from "@/services/hooks/useDeleteTask";
 import { useGetColumns } from "@/services/hooks/useGetColumns";
 import { useGetNotifications } from "@/services/hooks/useGetNotifications";
 import { useGetProjectProgress } from "@/services/hooks/useGetProjectProgress";
 import { useGetProjects } from "@/services/hooks/useGetProjects";
 import { useGetTasks } from "@/services/hooks/useGetTasks";
+import { useGetTeam } from "@/services/hooks/useGetTeam";
 import { useUpdateTask } from "@/services/hooks/useUpdateTask";
 import { Task } from "@/services/types/task.types";
 import { useState } from "react";
@@ -29,7 +32,10 @@ export default function Home() {
   const createProject = useCreateProject();
   const getProjects = useGetProjects();
   const projectProgress = useGetProjectProgress();
+  const createTeam = useCreateTeam();
+  const team = useGetTeam();
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
+  const [isTeamModalOpen, setIsTeamModalOpen] = useState(false);
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task>();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -43,6 +49,7 @@ export default function Home() {
         notifications={notifications}
         onCreateTask={() => setIsTaskModalOpen(true)}
         onCreateProject={() => setIsProjectModalOpen(true)}
+        onCreateTeam={() => setIsTeamModalOpen(true)}
       />
       <div className="flex w-full">
         <Sidebar
@@ -96,6 +103,7 @@ export default function Home() {
       </div>
 
       <TaskModal
+        team={team}
         createTask={createTask}
         updateTask={updateTask}
         deleteTask={deleteTask}
@@ -111,6 +119,12 @@ export default function Home() {
         createProject={createProject}
         isOpen={isProjectModalOpen}
         onClose={() => setIsProjectModalOpen(false)}
+      />
+
+      <TeamModal
+        createTeam={createTeam}
+        isOpen={isTeamModalOpen}
+        onClose={() => setIsTeamModalOpen(false)}
       />
     </div>
   );
