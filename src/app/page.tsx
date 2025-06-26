@@ -65,6 +65,7 @@ export default function Home() {
           <div className="p-6 space-y-6">
             {/* Metrics Panel */}
             <MetricsPanel />
+
             <ProjectProgress projectProgress={projectProgress} />
 
             {/* Main Content Area */}
