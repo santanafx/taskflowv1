@@ -2,5 +2,6 @@
   "/notifications*": "/notifications$1",
   "/tasks*": "/tasks$1",
   "/columns*": "/columns$1",
-  "/projects*": "/projects$1"
+  "/projects*": "/projects$1",
+  "/team*": "/team$1"
 }
