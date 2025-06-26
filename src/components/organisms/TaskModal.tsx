@@ -1,37 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import {
-  Flag,
-  User,
-  MessageCircle,
-  Paperclip,
-  Plus,
-  X,
-  CalendarIcon,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { UseMutationResult } from "@tanstack/react-query";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
@@ -40,22 +18,46 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
+import { Comment, Task } from "@/services/types/task.types";
+import { Team } from "@/services/types/team.types";
+import { RootState } from "@/store";
+import { getInitials } from "@/utils/getInitials";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { UseMutationResult, UseQueryResult } from "@tanstack/react-query";
+import { format } from "date-fns";
+import {
+  CalendarIcon,
+  Flag,
+  MessageCircle,
+  Paperclip,
+  Plus,
+  User,
+  X,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
+import { z } from "zod";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { cn } from "@/lib/utils";
-import { format } from "date-fns";
-import { getInitials } from "@/utils/getInitials";
-import { Comment, Task } from "@/services/types/task.types";
-import { RootState } from "@/store";
-import { useSelector } from "react-redux";
 
 interface TaskModalProps {
+  team: UseQueryResult<Team[]>;
   createTask: UseMutationResult<Task, Error, Task, unknown>;
   updateTask: UseMutationResult<Task, Error, Task, unknown>;
   deleteTask: UseMutationResult<void, Error, string, unknown>;
@@ -98,6 +100,7 @@ const AVAILABLE_TAGS = [
 const AVAILABLE_PRIORITIES = ["low", "medium", "high"];
 
 export function TaskModal({
+  team,
   createTask,
   updateTask,
   deleteTask,
@@ -506,16 +509,11 @@ export function TaskModal({
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="Ana Silva">Ana Silva</SelectItem>
-                          <SelectItem value="João Santos">
-                            João Santos
-                          </SelectItem>
-                          <SelectItem value="Carlos Lima">
-                            Carlos Lima
-                          </SelectItem>
-                          <SelectItem value="Maria Costa">
-                            Maria Costa
-                          </SelectItem>
+                          {team.data?.map((member) => (
+                            <SelectItem value={member.name} key={member.id}>
+                              {member.name}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                       <FormMessage />
