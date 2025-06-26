@@ -1,29 +1,29 @@
 "use client";
 
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Home,
-  Folder,
-  Calendar,
-  Users,
-  BarChart3,
-  Filter,
-  Plus,
-  Kanban,
-  List,
-  TimerIcon as Timeline,
-} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { useRouter, usePathname } from "next/navigation";
-import { UseQueryResult } from "@tanstack/react-query";
-import { Project } from "@/services/types/project.type";
 import { cn } from "@/lib/utils";
-import { selectProject } from "@/store/slices/project/project.slice";
+import { Project } from "@/services/types/project.types";
 import { RootState } from "@/store";
+import { selectProject } from "@/store/slices/project/project.slice";
+import { UseQueryResult } from "@tanstack/react-query";
+import {
+  BarChart3,
+  Calendar,
+  ChevronLeft,
+  ChevronRight,
+  Filter,
+  Folder,
+  Home,
+  Kanban,
+  List,
+  Plus,
+  TimerIcon as Timeline,
+  Users,
+} from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 interface SidebarProps {
   getProjects: UseQueryResult<Project[]>;
