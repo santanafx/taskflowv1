@@ -9,7 +9,12 @@ export function useUpdateTask() {
   return useMutation({
     mutationFn: (task: Task) => apiService.put<Task>(`/tasks/${task.id}`, task),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QueryKeys.TASKS] });
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeys.TASKS],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeys.PROJECTSPROGRESS],
+      });
     },
   });
 }
