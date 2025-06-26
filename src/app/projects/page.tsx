@@ -93,6 +93,7 @@ export default function ProjectPage() {
           </Button>
         </div>
 
+        {/* TODO implement filters */}
         {/* Filters */}
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-white p-4 rounded-lg border border-gray-200">
           <div className="relative w-full md:w-80">
