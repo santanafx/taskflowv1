@@ -1,132 +1,116 @@
 "use client";
 import { ProjectProgress } from "@/components/molecules/ProjectProgress";
-import { Header } from "@/components/organisms/Header";
 import { KanbanBoard } from "@/components/organisms/KanbanBoard";
 import { MetricsPanel } from "@/components/organisms/MetricsPanel";
-import { ProjectModal } from "@/components/organisms/ProjectModal";
-import { Sidebar } from "@/components/organisms/Sidebar";
-import { TaskModal } from "@/components/organisms/TaskModal";
-import { TeamModal } from "@/components/organisms/TeamModal";
-import { useCreateProject } from "@/services/hooks/useCreateProject";
-
-import { useCreateTask } from "@/services/hooks/useCreateTask";
-import { useCreateTeam } from "@/services/hooks/useCreateTeam";
-import { useDeleteTask } from "@/services/hooks/useDeleteTask";
+import { AppLayout } from "@/components/layouts/AppLayout";
 import { useGetColumns } from "@/services/hooks/useGetColumns";
-import { useGetNotifications } from "@/services/hooks/useGetNotifications";
 import { useGetProjectProgress } from "@/services/hooks/useGetProjectProgress";
-import { useGetProjects } from "@/services/hooks/useGetProjects";
 import { useGetTasks } from "@/services/hooks/useGetTasks";
-import { useGetTeam } from "@/services/hooks/useGetTeam";
 import { useUpdateTask } from "@/services/hooks/useUpdateTask";
+import { useCreateProject } from "@/services/hooks/useCreateProject";
+import { useGetProjects } from "@/services/hooks/useGetProjects";
+import { useGetNotifications } from "@/services/hooks/useGetNotifications";
+import { useCreateTeam } from "@/services/hooks/useCreateTeam";
+import { useGetTeam } from "@/services/hooks/useGetTeam";
+import { useCreateTask } from "@/services/hooks/useCreateTask";
+import { useDeleteTask } from "@/services/hooks/useDeleteTask";
 import { Task } from "@/services/types/task.types";
 import { useState } from "react";
 
 export default function Home() {
-  const notifications = useGetNotifications();
-  const createTask = useCreateTask();
   const tasks = useGetTasks();
   const columns = useGetColumns();
+  const projectProgress = useGetProjectProgress();
   const updateTask = useUpdateTask();
-  const deleteTask = useDeleteTask();
   const createProject = useCreateProject();
   const getProjects = useGetProjects();
-  const projectProgress = useGetProjectProgress();
+  const notifications = useGetNotifications();
   const createTeam = useCreateTeam();
   const team = useGetTeam();
-  const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
-  const [isTeamModalOpen, setIsTeamModalOpen] = useState(false);
-  const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
-  const [selectedTask, setSelectedTask] = useState<Task>();
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const createTask = useCreateTask();
+  const deleteTask = useDeleteTask();
   const [selectedView, setSelectedView] = useState<
     "kanban" | "timeline" | "list"
   >("kanban");
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
+  const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
+  const [isTeamModalOpen, setIsTeamModalOpen] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<Task>();
+  const handleTaskModalOpen = () => setIsTaskModalOpen(true);
+  const handleTaskModalClose = () => {
+    setIsTaskModalOpen(false);
+    setSelectedTask(undefined);
+  };
+  const handleProjectModalOpen = () => setIsProjectModalOpen(true);
+  const handleProjectModalClose = () => setIsProjectModalOpen(false);
+  const handleTeamModalOpen = () => setIsTeamModalOpen(true);
+  const handleTeamModalClose = () => setIsTeamModalOpen(false);
+  const handleSidebarToggle = () => setSidebarCollapsed(!sidebarCollapsed);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      <Header
-        notifications={notifications}
-        onCreateTask={() => setIsTaskModalOpen(true)}
-        onCreateProject={() => setIsProjectModalOpen(true)}
-        onCreateTeam={() => setIsTeamModalOpen(true)}
-      />
-      <div className="flex w-full">
-        <Sidebar
-          getProjects={getProjects}
-          collapsed={sidebarCollapsed}
-          onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
-          selectedView={selectedView}
-          onViewChange={setSelectedView}
-          onCreateProject={() => setIsProjectModalOpen(true)}
-        />
+    <AppLayout
+      selectedView={selectedView}
+      onViewChange={setSelectedView}
+      sidebarCollapsed={sidebarCollapsed}
+      onSidebarToggle={handleSidebarToggle}
+      isTaskModalOpen={isTaskModalOpen}
+      isProjectModalOpen={isProjectModalOpen}
+      isTeamModalOpen={isTeamModalOpen}
+      selectedTask={selectedTask}
+      onTaskModalOpen={handleTaskModalOpen}
+      onTaskModalClose={handleTaskModalClose}
+      onProjectModalOpen={handleProjectModalOpen}
+      onProjectModalClose={handleProjectModalClose}
+      onTeamModalOpen={handleTeamModalOpen}
+      onTeamModalClose={handleTeamModalClose}
+      notifications={notifications}
+      projects={getProjects}
+      team={team}
+      createProject={createProject}
+      createTeam={createTeam}
+      createTask={createTask}
+      updateTask={updateTask}
+      deleteTask={deleteTask}
+    >
+      <div className="p-6 space-y-6">
+        {/* Metrics Panel */}
+        <MetricsPanel />
 
-        <main className={`flex-1 transition-all duration-300 pt-16`}>
-          <div className="p-6 space-y-6">
-            {/* Metrics Panel */}
-            <MetricsPanel />
+        <ProjectProgress projectProgress={projectProgress} />
 
-            <ProjectProgress projectProgress={projectProgress} />
-
-            {/* Main Content Area */}
-            <div className="bg-white rounded-lg shadow-sm border">
-              {selectedView === "kanban" && (
-                <KanbanBoard
-                  tasks={tasks}
-                  columns={columns}
-                  updateTask={updateTask}
-                  onTaskClick={(task) => {
-                    setSelectedTask(task);
-                    setIsTaskModalOpen(true);
-                  }}
-                  onCreateTask={() => {
-                    setSelectedTask(undefined);
-                    setIsTaskModalOpen(true);
-                  }}
-                  setSelectedTask={setSelectedTask}
-                />
-              )}
-              {selectedView === "timeline" && (
-                <div className="p-8 text-center text-gray-500">
-                  <h3 className="text-lg font-medium mb-2">Timeline View</h3>
-                  <p>Timeline visualization coming soon...</p>
-                </div>
-              )}
-              {selectedView === "list" && (
-                <div className="p-8 text-center text-gray-500">
-                  <h3 className="text-lg font-medium mb-2">List View</h3>
-                  <p>List view coming soon...</p>
-                </div>
-              )}
+        {/* Main Content Area */}
+        <div className="bg-white rounded-lg shadow-sm border">
+          {selectedView === "kanban" && (
+            <KanbanBoard
+              tasks={tasks}
+              columns={columns}
+              updateTask={updateTask}
+              onTaskClick={(task) => {
+                setSelectedTask(task);
+                setIsTaskModalOpen(true);
+              }}
+              onCreateTask={() => {
+                setSelectedTask(undefined);
+                setIsTaskModalOpen(true);
+              }}
+              setSelectedTask={setSelectedTask}
+            />
+          )}
+          {selectedView === "timeline" && (
+            <div className="p-8 text-center text-gray-500">
+              <h3 className="text-lg font-medium mb-2">Timeline View</h3>
+              <p>Timeline visualization coming soon...</p>
             </div>
-          </div>
-        </main>
+          )}
+          {selectedView === "list" && (
+            <div className="p-8 text-center text-gray-500">
+              <h3 className="text-lg font-medium mb-2">List View</h3>
+              <p>List view coming soon...</p>
+            </div>
+          )}
+        </div>
       </div>
-
-      <TaskModal
-        team={team}
-        createTask={createTask}
-        updateTask={updateTask}
-        deleteTask={deleteTask}
-        isOpen={isTaskModalOpen}
-        onClose={() => {
-          setIsTaskModalOpen(false);
-          setSelectedTask(undefined);
-        }}
-        selectedTask={selectedTask}
-      />
-
-      <ProjectModal
-        createProject={createProject}
-        isOpen={isProjectModalOpen}
-        onClose={() => setIsProjectModalOpen(false)}
-      />
-
-      <TeamModal
-        createTeam={createTeam}
-        isOpen={isTeamModalOpen}
-        onClose={() => setIsTeamModalOpen(false)}
-      />
-    </div>
+    </AppLayout>
   );
 }
