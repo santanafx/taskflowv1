@@ -11,6 +11,7 @@ import { useCreateTask } from "@/services/hooks/useCreateTask";
 import { useDeleteTask } from "@/services/hooks/useDeleteTask";
 import { useGetColumns } from "@/services/hooks/useGetColumns";
 import { useGetNotifications } from "@/services/hooks/useGetNotifications";
+import { useGetProjectProgress } from "@/services/hooks/useGetProjectProgress";
 import { useGetProjects } from "@/services/hooks/useGetProjects";
 import { useGetTasks } from "@/services/hooks/useGetTasks";
 import { useUpdateTask } from "@/services/hooks/useUpdateTask";
@@ -26,6 +27,7 @@ export default function Home() {
   const deleteTask = useDeleteTask();
   const createProject = useCreateProject();
   const getProjects = useGetProjects();
+  const projectProgress = useGetProjectProgress();
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task>();
@@ -54,7 +56,7 @@ export default function Home() {
         <main className={`flex-1 transition-all duration-300 pt-16`}>
           <div className="p-6 space-y-6">
             {/* Metrics Panel */}
-            <MetricsPanel />
+            <MetricsPanel projectProgress={projectProgress} />
 
             {/* Main Content Area */}
             <div className="bg-white rounded-lg shadow-sm border">
