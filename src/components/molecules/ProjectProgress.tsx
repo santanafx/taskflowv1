@@ -1,17 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-
-interface Project {
-  name: string;
-  progress: number;
-  color: string;
-}
-
+import { ProjectProgressTypes } from "@/services/types/projectProgress.types";
 interface ProjectProgressProps {
-  projects: Project[];
+  projectProgress: ProjectProgressTypes[];
 }
 
-export function ProjectProgress({ projects }: ProjectProgressProps) {
+export function ProjectProgress({ projectProgress }: ProjectProgressProps) {
   return (
     <Card>
       <CardHeader>
@@ -21,7 +15,7 @@ export function ProjectProgress({ projects }: ProjectProgressProps) {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {projects.map((project) => (
+          {projectProgress.map((project) => (
             <div key={project.name} className="space-y-2">
               <div className="flex justify-between items-center">
                 <div className="flex items-center space-x-2">
