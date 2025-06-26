@@ -1,4 +1,5 @@
 "use client";
+import { ProjectProgress } from "@/components/molecules/ProjectProgress";
 import { Header } from "@/components/organisms/Header";
 import { KanbanBoard } from "@/components/organisms/KanbanBoard";
 import { MetricsPanel } from "@/components/organisms/MetricsPanel";
@@ -56,7 +57,8 @@ export default function Home() {
         <main className={`flex-1 transition-all duration-300 pt-16`}>
           <div className="p-6 space-y-6">
             {/* Metrics Panel */}
-            <MetricsPanel projectProgress={projectProgress} />
+            <MetricsPanel />
+            <ProjectProgress projectProgress={projectProgress} />
 
             {/* Main Content Area */}
             <div className="bg-white rounded-lg shadow-sm border">
