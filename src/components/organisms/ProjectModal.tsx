@@ -1,19 +1,20 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { z } from "zod";
-import { UseMutationResult } from "@tanstack/react-query";
-import { Project } from "@/services/types/project.type";
-import { useForm } from "react-hook-form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Project } from "@/services/types/project.types";
+import { generateRandomColor } from "@/utils/colors";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { UseMutationResult } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import {
   Form,
   FormControl,
@@ -22,7 +23,6 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { generateRandomColor } from "@/utils/colors";
 
 interface ProjectModalProps {
   createProject: UseMutationResult<Project, Error, Project, unknown>;
