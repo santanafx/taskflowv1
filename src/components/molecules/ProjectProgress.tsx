@@ -37,12 +37,21 @@ export function ProjectProgress({ projectProgress }: ProjectProgressProps) {
     );
   }
 
+  if (!projectProgress.data || projectProgress.data.length === 0)
+    return (
+      <div className="bg-white rounded-lg shadow-sm border">
+        <div className="flex justify-center items-center h-[200px]">
+          <h3 className="font-semibold text-gray-800">Select a project</h3>
+        </div>
+      </div>
+    );
+
   return (
     <div className="space-y-6">
       <Card>
         <CardHeader>
           <CardTitle className="text-lg font-semibold text-brand-primary">
-            Project Progress
+            Projects Progress
           </CardTitle>
         </CardHeader>
         <CardContent>
