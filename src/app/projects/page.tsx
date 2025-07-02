@@ -7,46 +7,37 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Grid, List, Plus, Search } from "lucide-react";
 import { ProjectCard } from "@/components/organisms/ProjectCard";
 import { AppLayout } from "@/components/layouts/AppLayout";
-import { useCreateProject } from "@/services/hooks/useCreateProject";
-import { useGetProjects } from "@/services/hooks/useGetProjects";
 import { useGetProjectDetails } from "@/services/hooks/useGetProjectDetails";
-import { useGetNotifications } from "@/services/hooks/useGetNotifications";
-import { useCreateTeam } from "@/services/hooks/useCreateTeam";
-import { useGetTeam } from "@/services/hooks/useGetTeam";
-import { useCreateTask } from "@/services/hooks/useCreateTask";
-import { useUpdateTask } from "@/services/hooks/useUpdateTask";
-import { useDeleteTask } from "@/services/hooks/useDeleteTask";
-import { Task } from "@/services/types/task.types";
+import { useAppState } from "@/hooks/useAppState";
 import { cn } from "@/lib/utils";
 
 export default function ProjectPage() {
-  const createProject = useCreateProject();
-  const getProjects = useGetProjects();
-  const projectDetails = useGetProjectDetails();
-  const notifications = useGetNotifications();
-  const createTeam = useCreateTeam();
-  const team = useGetTeam();
-  const createTask = useCreateTask();
-  const updateTask = useUpdateTask();
-  const deleteTask = useDeleteTask();
+  const {
+    createProject,
+    getProjects,
+    notifications,
+    createTeam,
+    team,
+    createTask,
+    updateTask,
+    deleteTask,
+    sidebarCollapsed,
+    isTaskModalOpen,
+    isProjectModalOpen,
+    isTeamModalOpen,
+    selectedTask,
+    handleTaskModalOpen,
+    handleTaskModalClose,
+    handleProjectModalOpen,
+    handleProjectModalClose,
+    handleTeamModalOpen,
+    handleTeamModalClose,
+    handleSidebarToggle,
+  } = useAppState();
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [searchQuery, setSearchQuery] = useState("");
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
-  const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
-  const [isTeamModalOpen, setIsTeamModalOpen] = useState(false);
-  const [selectedTask, setSelectedTask] = useState<Task>();
-  const handleTaskModalOpen = () => setIsTaskModalOpen(true);
-  const handleTaskModalClose = () => {
-    setIsTaskModalOpen(false);
-    setSelectedTask(undefined);
-  };
-  const handleProjectModalOpen = () => setIsProjectModalOpen(true);
-  const handleProjectModalClose = () => setIsProjectModalOpen(false);
-  const handleTeamModalOpen = () => setIsTeamModalOpen(true);
-  const handleTeamModalClose = () => setIsTeamModalOpen(false);
-  const handleSidebarToggle = () => setSidebarCollapsed(!sidebarCollapsed);
 
+  const projectDetails = useGetProjectDetails();
   const projects = projectDetails.data || [];
 
   const filteredProjects = projects.filter((project) =>
