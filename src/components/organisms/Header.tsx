@@ -42,7 +42,7 @@ export function Header({
     (state: RootState) => state.project.selectedProject
   );
   const userName = useSelector((state: RootState) => state.user.userName);
-  const unreadCount = notifications.data?.filter((n) => n.unread).length ?? 0;
+  const unreadCount = (notifications.data || []).filter((n) => n.unread).length;
   const isProjectSelected = selectedProject.name !== "";
 
   return (
