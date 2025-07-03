@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAppState } from "@/hooks/useAppState";
 import { useGetTeam } from "@/services/hooks/useGetTeam";
-import { Plus, Search, UserPlus } from "lucide-react";
+import { Plus, Search } from "lucide-react";
 import { useState } from "react";
 
 export default function Team() {
