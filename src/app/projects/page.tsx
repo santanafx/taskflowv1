@@ -68,7 +68,6 @@ export default function ProjectPage() {
       deleteTask={deleteTask}
     >
       <div className="p-6 space-y-6">
-        {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-brand-primary">Projects</h1>
