@@ -54,7 +54,6 @@ export function Sidebar({
   const navigation = [
     { id: "dashboard", name: "Dashboard", icon: Home, path: "/" },
     { id: "projects", name: "Projects", icon: Folder, path: "/projects" },
-    { id: "calendar", name: "Calendar", icon: Calendar, path: "/calendar" },
     { id: "team", name: "Team", icon: Users, path: "/team" },
     { id: "reports", name: "Reports", icon: BarChart3, path: "/reports" },
   ];
