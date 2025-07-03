@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { useGetColumns } from "../services/hooks/useGetColumns";
 import { useGetProjectProgress } from "../services/hooks/useGetProjectProgress";
