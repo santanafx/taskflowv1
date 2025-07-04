@@ -1,5 +1,9 @@
 # TaskFlow - Sistema de Gerenciamento de Projetos
 
+<p align="center">
+  <img src="docs/images/banner.png" alt="TaskFlow Banner" width="800">
+</p>
+
 ## 📋 Descrição do Projeto
 
 O **TaskFlow** é uma aplicação web moderna para gerenciamento de projetos e coordenação de equipes, inspirada no Jira. O sistema oferece funcionalidades essenciais para gestão de projetos, incluindo:
@@ -15,11 +19,29 @@ O projeto foi desenvolvido utilizando **Next.js 15** com TypeScript, seguindo as
 
 ### Screenshots
 
-_[Seção para adicionar screenshots do projeto]_
+#### 🖥️ Página Principal
+
+<p align="center">
+  <img src="docs/images/main-page.jpg" alt="Página Principal do TaskFlow" width="800">
+</p>
+
+**Descrição**: Interface principal do TaskFlow mostrando o dashboard com visão geral dos projetos, tarefas pendentes e métricas principais.
+
+#### 📊 Dashboard com Gráficos
+
+<p align="center">
+  <img src="docs/images/charts.jpg" alt="Dashboard com Gráficos do TaskFlow" width="800">
+</p>
+
+**Descrição**: Dashboard avançado com gráficos e análises detalhadas do progresso dos projetos, incluindo métricas de produtividade e distribuição de tarefas.
 
 ### Vídeos
 
-_[Seção para adicionar vídeos demonstrativos]_
+#### Demonstração do Projeto
+
+[![TaskFlow Demo](https://img.youtube.com/vi/NNAVFzZ-ls4/maxresdefault.jpg)](https://youtu.be/NNAVFzZ-ls4)
+
+**Descrição**: Vídeo demonstrativo mostrando as principais funcionalidades do TaskFlow, incluindo o quadro Kanban, dashboard e gestão de projetos.
 
 ## 🛠️ Tecnologias Utilizadas
 
