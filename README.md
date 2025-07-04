@@ -1,9 +1,5 @@
 # TaskFlow - Sistema de Gerenciamento de Projetos
 
-<p align="center">
-  <img src="docs/images/banner.png" alt="TaskFlow Banner" width="800">
-</p>
-
 ## 📋 Descrição do Projeto
 
 O **TaskFlow** é uma aplicação web moderna para gerenciamento de projetos e coordenação de equipes, inspirada no Jira. O sistema oferece funcionalidades essenciais para gestão de projetos, incluindo:
